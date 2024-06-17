@@ -20,26 +20,26 @@ public class LimiteController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<Limite>> getAllLimites() {
-        return ResponseEntity.ok(limiteService.findAllLimites());
+    public List<Limite> getAllLimites() {
+        return limiteService.findAllLimites();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Limite> getLimiteById(@PathVariable Long id) {
+    public Limite getLimiteById(@PathVariable Long id) {
         Optional<Limite> limite = limiteService.findLimiteById(id);
         if (limite.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return null;
         }
-        return ResponseEntity.ok(limite.get());
+        return limite.get();
     }
 
     @GetMapping("/capteur/{idCapteur}")
-    public ResponseEntity<Limite> getLimiteByIdCapteur(@PathVariable Long idCapteur) {
+    public Limite getLimiteByIdCapteur(@PathVariable Long idCapteur) {
         if (limiteService.findLimitesByIdCapteur(idCapteur).isPresent()){
-            return ResponseEntity.ok(limiteService.findLimitesByIdCapteur(idCapteur).get());
+            return limiteService.findLimitesByIdCapteur(idCapteur).get();
         }
         else {
-            return ResponseEntity.notFound().build();
+            return null;
         }
     }
 
@@ -49,19 +49,19 @@ public class LimiteController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Limite> updateLimite(@PathVariable Long id, @RequestBody Limite limite) {
+    public Limite updateLimite(@PathVariable Long id, @RequestBody Limite limite) {
         Optional<Limite> existingLimite = limiteService.findLimiteById(id);
         if (existingLimite.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return null;
         }
         limite.setId(id);
-        return ResponseEntity.ok(limiteService.saveLimite(limite));
+        return limiteService.saveLimite(limite);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteLimite(@PathVariable Long id) {
         if (limiteService.findLimiteById(id).isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return null;
         }
         limiteService.deleteLimite(id);
         return ResponseEntity.ok().build();
